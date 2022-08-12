@@ -198,7 +198,7 @@ $monthName=checkVariable($month['name'],0,'trim');
 </div>
 </section>
 <script type="text/javascript">
-
+console.log(hello);
 $(document).ready(function(e){
 	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
