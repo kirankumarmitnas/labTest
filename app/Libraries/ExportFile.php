@@ -42,7 +42,24 @@ class  ExportFile
 		{
 			$userSelectedFields=array(0,1,2,3,4,5);
 		}*/
-		$fileTitle=' Doctorwise Report ';
+		$reportOptions=CommonMethods::getReportOptions(0);
+		$reportOptionsStatus=isEmptyArray($reportOptions);
+		$monthList=($reportOptionsStatus>0) ? checkVariable($reportOptions['monthList'],0) : 0;
+		$monthName='';
+		$reportFor='';
+		$info=searchValueInArray(array('data'=>$monthList,'search'=>array('id'=>$month),'type'=>1,'isSingle'=>1));
+		if(isEmptyArray($info)>0){ 
+		$monthName=checkVariable($info['name'],0,'trim');
+		}
+		if($year>0)
+		{
+		$reportFor=$year;
+		if(!empty($monthName))
+		{
+			$reportFor.='-'.$monthName;
+		}
+		}
+		$fileTitle=' Doctorwise Report '.$reportFor;
 		if(in_array($processType,array(2,3))==true)
 		{
 			if($year>0)
@@ -57,7 +74,7 @@ class  ExportFile
 			$parameters['search']=$search;
 			if($processType==2)
 			{
-				$fileTitle=' Monthly Report ';
+				$fileTitle=' Monthly Report '.$reportFor;
 				$fieldList=array(
 				array('name'=>'Sr No','field'=>'key','width'=>10,'position'=>1),
 				array('name'=>'Doctor Name','field'=>'doctorName','width'=>40,'position'=>2),
@@ -70,7 +87,7 @@ class  ExportFile
 			}
 			else
 			{
-				$fileTitle=' Servicewise Report ';
+				$fileTitle=' Servicewise Report '.$reportFor;
 				$fieldList=array(
 				array('name'=>'Sr No','field'=>'key','width'=>10,'position'=>1),
 				array('name'=>'Service Name','field'=>'testName','width'=>40,'position'=>2),
@@ -397,7 +414,24 @@ class  ExportFile
 		{
 			$userSelectedFields=array(0,1,2,3,4,5);
 		}*/
-		$fileTitle=' Doctorwise Report ';
+		$reportOptions=CommonMethods::getReportOptions(0);
+		$reportOptionsStatus=isEmptyArray($reportOptions);
+		$monthList=($reportOptionsStatus>0) ? checkVariable($reportOptions['monthList'],0) : 0;
+		$monthName='';
+		$reportFor='';
+		$info=searchValueInArray(array('data'=>$monthList,'search'=>array('id'=>$month),'type'=>1,'isSingle'=>1));
+		if(isEmptyArray($info)>0){ 
+		$monthName=checkVariable($info['name'],0,'trim');
+		}
+		if($year>0)
+		{
+		$reportFor=$year;
+		if(!empty($monthName))
+		{
+			$reportFor.='-'.$monthName;
+		}
+		}
+		$fileTitle=' Doctorwise Report '.$reportFor;
 		if(in_array($processType,array(2,3))==true)
 		{
 			if($year>0)
@@ -412,7 +446,7 @@ class  ExportFile
 			$parameters['search']=$search;
 			if($processType==2)
 			{
-				$fileTitle=' Monthly Report ';
+				$fileTitle=' Monthly Report '.$reportFor;
 				$fieldList=array(
 				array('name'=>'Sr No','field'=>'key','width'=>10,'position'=>1),
 				array('name'=>'Doctor Name','field'=>'doctorName','width'=>40,'position'=>2),
@@ -425,7 +459,7 @@ class  ExportFile
 			}
 			else
 			{
-				$fileTitle=' Servicewise Report ';
+				$fileTitle=' Servicewise Report '.$reportFor;
 				$fieldList=array(
 				array('name'=>'Sr No','field'=>'key','width'=>10,'position'=>1),
 				array('name'=>'Service Name','field'=>'testName','width'=>40,'position'=>2),

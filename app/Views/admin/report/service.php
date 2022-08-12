@@ -220,7 +220,7 @@ $(document).ready(function(e){
 			src: url,
 			id:  'myFrame',
 			frameborder: 0,
-			class : 'hide formIframe',
+			class : 'd-none  formIframe',
 			scrolling: 'no'
 			}).appendTo('body.authenticate');
 		}
@@ -252,7 +252,7 @@ $(document).ready(function(e){
 			id:  'myFrame',
 			type:"application/pdf",
 			frameborder: 0,
-			class : 'hide formIframe',
+			class : 'd-none  formIframe',
 			scrolling: 'no'
 			}).appendTo('body.authenticate');
 			var myFrame=$("#myFrame");
