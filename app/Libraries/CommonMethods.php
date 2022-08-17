@@ -115,41 +115,59 @@ class  CommonMethods
 		$db=\Config\Database::connect();
 		$timing = new \Config\Timing();
         $today = $timing->today;
-		$queryText="select count(srNo) found from member_registration where registerStatus=? and isRemoved=?";
-		$parameters=array($registerStatus,$isRemoved);
+		$currentMonth=intval($timing->currentMonth);
+		$currentDay=intval($timing->currentDay);
+		$currentYear=intval($timing->currentYear);
+		$queryText="SELECT count(srNo) found ,DAY(labDate) day FROM test_list where lStatus=? and isRemoved=? and year(labDate)=? and month(labDate)=? group by day(labDate) order by day ASC ";
+		$parameters=array(1,$isRemoved,$currentYear,$currentMonth);
 		$selQuery = $db->query($queryText,$parameters);
 		if($selQuery->getNumRows()>0)
 		{
-			$row=$selQuery->getRowArray();
-			$response['registration']['total']=checkVariable($row['found'],0,'intval');
+			$rows=$selQuery->getResultArray();
+			$response['testList']['dateWise']=$rows;
 		}
-		$queryText="select sum(amount) amount from payment_details where payStatus=? and isRemoved=?";
-		$parameters=array($payStatus,$isRemoved);
+		$queryText="SELECT count(srNo) found,month(labDate) month FROM test_list where lStatus=? and isRemoved=? and year(labDate)=? group by month(labDate) order by month ASC ";
+		$parameters=array(1,$isRemoved,$currentYear);
 		$selQuery = $db->query($queryText,$parameters);
 		if($selQuery->getNumRows()>0)
 		{
-			$row=$selQuery->getRowArray();
-			$response['registration']['amount']=checkVariable($row['amount'],0,'doubleval');
+			$rows=$selQuery->getResultArray();
+			$response['testList']['monthWise']=$rows;
 		}
-		$queryText="select sum(amount) amount from payment_details where payStatus=? and isRemoved=? and paymentMode=?";
-		$paymentMode=10;
-		$parameters=array($payStatus,$isRemoved,$paymentMode);
+		$limit=5;
+		$queryText="SELECT tl.testID,tl.doctorID,tl.labDate,tl.patientName,dl.doctorName FROM test_list tl left join doctor_list dl on tl.doctorID=dl.srNo WHERE tl.lStatus=? and tl.isRemoved=? order by date(tl.labDate) DESC limit ? ";
+		$parameters=array(1,$isRemoved,$limit);
 		$selQuery = $db->query($queryText,$parameters);
 		if($selQuery->getNumRows()>0)
 		{
-			$row=$selQuery->getRowArray();
-			$response['registration']['onlineAmount']=checkVariable($row['amount'],0,'doubleval');
+			$result=$selQuery->getResultArray();
+			if(isEmptyArray($result)>0)
+			{
+				foreach($result as $row)
+				{
+					$testID=checkVariable($row['testID'],'','trim');
+					if(!empty($testID))
+					{
+						$queryText2="SELECT testName,amount,discountValue FROM test_details WHERE isRemoved=? and tStatus=? and testID=? order by tOrder ASC ";
+						$parameters2=array($isRemoved,1,$testID);
+						$selQuery2 = $db->query($queryText2,$parameters2);
+						if($selQuery2->getNumRows()>0)
+						{
+							$row['services']=$selQuery2->getResultArray();
+						}
+					}
+					$response['testList']['patients'][]=$row;
+				}
+			}
 		}
-		$queryText="select (SELECT count(srNo) found FROM member_registration  where registerStatus=? and isRemoved=? and packageID=(select srNo FROM package_info where packageName=? ) ) delegate,(SELECT count(srNo) found FROM member_registration  where registerStatus=? and isRemoved=? and  packageID=(select srNo FROM package_info where packageName=? )) student ";
-		$parameters=array($registerStatus,$isRemoved,'Delegate',$registerStatus,$isRemoved,'Student');
+		$queryText="SELECT td.testName,td.amount,td.discountValue,tl.labDate,dl.doctorName FROM test_details td inner join test_list tl on td.testID=tl.testID left join doctor_list dl on tl.doctorID=dl.srNo WHERE td.isRemoved=? and td.tStatus=? order by tl.labDate DESC,td.tOrder ASC limit ? ";
+		$parameters=array($isRemoved,1,$limit);
 		$selQuery = $db->query($queryText,$parameters);
 		if($selQuery->getNumRows()>0)
 		{
-			$row=$selQuery->getRowArray();
-			$response['registration']['dalegates']=checkVariable($row['delegate'],0,'intval');
-			$response['registration']['students']=checkVariable($row['student'],0,'intval');
+			$response['testList']['services']=$selQuery->getResultArray();
 		}
-		$fromDate=date("Y-m-d",strtotime('-7 days',$today));
+		/*$fromDate=date("Y-m-d",strtotime('-7 days',$today));
 		$toDate=date("Y-m-d",$today);
 		$queryText="select count(srNo) found,date(createdOn) createdOn from member_registration where registerStatus=? and isRemoved=? and date(createdOn) BETWEEN date(?) and date(?) GROUP by date(createdOn) ORDER by date(createdOn) DESC ";
 		$parameters=array($registerStatus,$isRemoved,$fromDate,$toDate);
@@ -158,33 +176,8 @@ class  CommonMethods
 		{
 			$rows=$selQuery->getResultArray();
 			$response['registration']['datewise']=$rows;
-		}
-		$queryText="select count(srNo) found from member_registration where registerStatus=? and isRemoved=? and registerFrom=?";
-		$registerFrom=1;
-		$parameters=array($registerStatus,$isRemoved,$registerFrom);
-		$selQuery = $db->query($queryText,$parameters);
-		if($selQuery->getNumRows()>0)
-		{
-			$row=$selQuery->getRowArray();
-			$response['registration']['offline']=checkVariable($row['found'],0,'intval');
-		}
-		$queryText="select count(srNo) found from member_registration where registerStatus=? and isRemoved=? and registerFrom=?";
-		$registerFrom=2;
-		$parameters=array($registerStatus,$isRemoved,$registerFrom);
-		$selQuery = $db->query($queryText,$parameters);
-		if($selQuery->getNumRows()>0)
-		{
-			$row=$selQuery->getRowArray();
-			$response['registration']['online']=checkVariable($row['found'],0,'intval');
-		}
-		$queryText="select count(srNo) found from member_accompanying_details  where  isRemoved=? and registerStatus=?";
-		$parameters=array($isRemoved,$registerStatus);
-		$selQuery = $db->query($queryText,$parameters);
-		if($selQuery->getNumRows()>0)
-		{
-			$row=$selQuery->getRowArray();
-			$response['accompanying']['total']=checkVariable($row['found'],0,'intval');
-		}
+		}*/
+		
 		$accountModel=new accountModel();
 		$sesName=AdminConfig::get('sesName');
 		$sesType=AdminConfig::get('sesType');

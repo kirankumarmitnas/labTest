@@ -218,9 +218,11 @@ class ManageTest extends BaseController
 				),
 			),
 			'age'    => array(
-				'rules'  => 'required|max_length[3]',#|valid_email
+				'rules'  => 'required|max_length[3]|less_than_equal_to[100]|greater_than_equal_to[1]',#|valid_email
 				'errors' => array(
 					'max_length' => 'age are between 0 to 100',
+					'less_than_equal_to' => 'age are between 0 to 100',
+					'greater_than_equal_to' => 'age are between 0 to 100',
 				),
 			),
 			'gender'    => array(

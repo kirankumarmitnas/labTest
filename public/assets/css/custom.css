@@ -31,6 +31,11 @@ button.noBtn
 {
 	color:#a2a2a2;
 }
+.serviceAmount
+{
+	font-size:0.7rem;
+	color:#6c757d;
+}
 
 body.authenticate
 {

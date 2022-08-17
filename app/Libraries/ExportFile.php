@@ -59,7 +59,18 @@ class  ExportFile
 			$reportFor.='-'.$monthName;
 		}
 		}
+		$doctorWiseName='';
 		$fileTitle=' Doctorwise Report '.$reportFor;
+		$doctorList=0;
+		$doctorModel = new DoctorModel();
+		$para=array('type'=>0);
+		$totalDoctor=$doctorModel->getList($para);
+		if($totalDoctor>0)
+		{
+		$para=array('fetchField'=>" srNo,doctorName,designation",'action'=>1,'orderBy'=>' order by doctorName ASC ','isMultiple'=>1,'limit'=>$totalDoctor,'type'=>1);
+		$doctorList=$doctorModel->getList($para);
+		}
+		$doctorListStatus=isEmptyArray($doctorList);
 		if(in_array($processType,array(2,3))==true)
 		{
 			if($year>0)
@@ -104,6 +115,13 @@ class  ExportFile
 			if($doctor>0)
 			{
 				$parameters['doctorID']=$doctor;
+				if($doctorListStatus>0)
+				{
+				$info=searchValueInArray(array('data'=>$doctorList,'search'=>array('srNo'=>$doctor),'type'=>1,'isSingle'=>1));
+				if(isEmptyArray($info)>0){ 
+				$doctorWiseName=checkVariable($info['doctorName'],'','trim');
+				}
+				}
 			}
 			if($year>0)
 			{
@@ -135,16 +153,7 @@ class  ExportFile
 		$maximum=0;
 		if(isEmptyArray($result)>0)
 		{
-		$doctorList=0;
-		$doctorModel = new DoctorModel();
-		$para=array('type'=>0);
-		$totalDoctor=$doctorModel->getList($para);
-		if($totalDoctor>0)
-		{
-		$para=array('fetchField'=>" srNo,doctorName,designation",'action'=>1,'orderBy'=>' order by doctorName ASC ','isMultiple'=>1,'limit'=>$totalDoctor,'type'=>1);
-		$doctorList=$doctorModel->getList($para);
-		}
-		$doctorListStatus=isEmptyArray($doctorList);
+		
 		$showFields=array();
 		$totalFields=count($fieldList);
 		if(isEmptyArray($userSelectedFields)>0)
@@ -265,9 +274,13 @@ class  ExportFile
 		</style>
 		</head>
 		<body>';
+		if(!empty($doctorWiseName))
+		{
+			$doctorWiseName=' - '.ucwords($doctorWiseName);
+		}
 		$data.='<!--mpdf
 		<htmlpageheader name="myheader" class="myheader" style="display:none">
-		<table border="0"><tbody><tr><td style="width:100%;" class="text-center"><h2>'.$projectName.'</h2></td></tr><tr><td style="width:100%;" class="text-center"><p style="font-size:13pt;">'.$fileTitle.'</p></td></tr><tr><td style="width:100%;" class="text-right"><p>Date: <b>'.date("d-m-Y h:i A").'</b></p></td></tr></tbody></table>
+		<table border="0"><tbody><tr><td style="width:100%;" class="text-center"><h2>'.$projectName.'</h2></td></tr><tr><td style="width:100%;" class="text-center"><p style="font-size:13pt;">'.$fileTitle.$doctorWiseName.'</p></td></tr><tr><td style="width:100%;" class="text-right"><p>Date: <b>'.date("d-m-Y h:i A").'</b></p></td></tr></tbody></table>
 		</htmlpageheader>
 		<htmlpagefooter name="myfooter" >
 		<div style=" font-size: 9pt; text-align: center; padding-top: 3mm; ">
@@ -431,7 +444,19 @@ class  ExportFile
 			$reportFor.='-'.$monthName;
 		}
 		}
+		$doctorWiseName='';
 		$fileTitle=' Doctorwise Report '.$reportFor;
+		$doctorList=0;
+		$doctorModel = new DoctorModel();
+		$para=array('type'=>0);
+		$totalDoctor=$doctorModel->getList($para);
+		if($totalDoctor>0)
+		{
+		$para=array('fetchField'=>" srNo,doctorName,designation",'action'=>1,'orderBy'=>' order by doctorName ASC ','isMultiple'=>1,'limit'=>$totalDoctor,'type'=>1);
+		$doctorList=$doctorModel->getList($para);
+		}
+		$doctorListStatus=isEmptyArray($doctorList);
+		
 		if(in_array($processType,array(2,3))==true)
 		{
 			if($year>0)
@@ -476,6 +501,13 @@ class  ExportFile
 			if($doctor>0)
 			{
 				$parameters['doctorID']=$doctor;
+				if($doctorListStatus>0)
+				{
+				$info=searchValueInArray(array('data'=>$doctorList,'search'=>array('srNo'=>$doctor),'type'=>1,'isSingle'=>1));
+				if(isEmptyArray($info)>0){ 
+				$doctorWiseName=checkVariable($info['doctorName'],'','trim');
+				}
+				}
 			}
 			if($year>0)
 			{
@@ -607,7 +639,11 @@ class  ExportFile
 		{
 		$sheet->mergeCells($showFields[0]['id'].$i.':'.$showFields[count($showFields)-1]['id'].$i);
 		}
-		$sheet->getCell('A'.$i)->setValue($fileTitle);
+		if(!empty($doctorWiseName))
+		{
+			$doctorWiseName=' - '.ucwords($doctorWiseName);
+		}
+		$sheet->getCell('A'.$i)->setValue($fileTitle.$doctorWiseName);
 		$styleArray = ['alignment' => [
 		'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
 		],];

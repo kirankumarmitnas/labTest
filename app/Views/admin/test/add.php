@@ -79,53 +79,8 @@ echo view($prePath.'common/headerSection');
 <div class="col-md-12 mt-3">
 <p class="fw-bold">Patient Details:-</p>
 </div>
-
-<div class="col-md-4">
-<div class="mb-2">
-<label  class="form-label text-dark">Patient Name:-<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
-<input type="text" class="form-control form-control-sm importantFields <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('patientName',$msg)==true){ echo 'is-invalid'; } ?>"   name="patientName" maxlength="150" placeholder="Patient Name" value="<?php echo old('patientName') ?>"  />
-<?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('patientName',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['patientName'],'','trim');?></div><?php } ?>
-
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="mb-2">
-<label  class="form-label text-dark">Mobile No:-<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
-<input type="text" class="form-control form-control-sm onlyNumber validateMobile importantFields <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('mobileNo',$msg)==true){ echo 'is-invalid'; } ?>"   name="mobileNo" maxlength="15" placeholder="Mobile No" value="<?php echo old('mobileNo') ?>"  />
-<?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('mobileNo',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['mobileNo'],'','trim');?></div><?php } ?>
-</div>
-</div>
-
-<div class="col-md-2">
-<div class="mb-2">
-<label  class="form-label text-dark"> Age:-<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
-<input type="text" class="form-control form-control-sm onlyNumber importantFields <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('age',$msg)==true){ echo 'is-invalid'; } ?>"   name="age" maxlength="2" placeholder="Age" value="<?php echo old('age') ?>"   />
-<?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('age',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['age'],'','trim');?></div><?php } ?>
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="mb-2 mt-md-4 mt-2 text-start">
-<label  class="form-label text-dark"> Gender:-<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
-<?php 
-$gender=old('gender');
-if(isEmptyArray($genderTypes)>0) { foreach($genderTypes as $genderInfo) { 
-$id=checkVariable($genderInfo['id'],0,'intval');
-$gName=checkVariable($genderInfo['name'],'','trim');
-if($id>0) {
-?>
-<div class="form-check form-check-inline">
-  <input class="form-check-input importantFields gender" <?php if($gender==$id) { echo 'checked'; } ?> type="radio" name="gender" id="<?php echo 'gender-'.$id;?>" value="<?php echo $id;?>"  />
-  <label class="form-check-label" for="<?php echo 'gender-'.$id;?>"><?php echo $gName;?></label>
-</div>
-<?php } }  } ?>
-<?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('gender',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['gender'],'','trim');?></div><?php } ?>
-</div>
-</div>
-
-<div class="col-md-4 mb-2">
-<label  class="form-label text-dark">Doctor Name<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
+<div class="col-md-3 mb-2">
+<label  class="form-label text-dark">referred Doctor Name<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
 <?php
 $doctor=old('doctor');
 ?>
@@ -144,7 +99,32 @@ if($srNo>0){
 <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('doctor',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['doctor'],'','trim');?></div><?php } ?>
 </div>
 
-<div class="col-md-2">
+<div class="col-md-3">
+<div class="mb-2">
+<label  class="form-label text-dark">Patient Name:-<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
+<input type="text" class="form-control form-control-sm importantFields <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('patientName',$msg)==true){ echo 'is-invalid'; } ?>"   name="patientName" maxlength="150" placeholder="Patient Name" value="<?php echo old('patientName') ?>"  />
+<?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('patientName',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['patientName'],'','trim');?></div><?php } ?>
+
+</div>
+</div>
+
+<div class="col-md-1">
+<div class="mb-2">
+<label  class="form-label text-dark">Mobile No:-<i class="ms-1 fa-solid fa-asterisk requiredLable"></i></label>
+<input type="text" class="form-control form-control-sm onlyNumber validateMobile importantFields <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('mobileNo',$msg)==true){ echo 'is-invalid'; } ?>"   name="mobileNo" maxlength="15" placeholder="Mobile No" value="<?php echo old('mobileNo') ?>"  />
+<?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('mobileNo',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['mobileNo'],'','trim');?></div><?php } ?>
+</div>
+</div>
+
+<div class="col-md-1">
+<div class="mb-2">
+<label  class="form-label text-dark"> Age:-<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
+<input type="text" class="form-control form-control-sm onlyNumber importantFields <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('age',$msg)==true){ echo 'is-invalid'; } ?>"   name="age" maxlength="3" placeholder="Age" value="<?php echo old('age') ?>"   />
+<?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('age',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['age'],'','trim');?></div><?php } ?>
+</div>
+</div>
+
+<div class="col-md-1">
 <div class="mb-3">
 <?php
 $testDate=old('testDate');
@@ -156,6 +136,24 @@ $testDate=(empty(trim($testDate))) ? date("d-m-Y") : $testDate;
 </div>
 </div>
 
+<div class="col-md-3">
+<div class="my-2 mt-md-4 text-start">
+<label  class="form-label text-dark"> Gender:-<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
+<?php 
+$gender=old('gender');
+if(isEmptyArray($genderTypes)>0) { foreach($genderTypes as $genderInfo) { 
+$id=checkVariable($genderInfo['id'],0,'intval');
+$gName=checkVariable($genderInfo['name'],'','trim');
+if($id>0) {
+?>
+<div class="form-check form-check-inline">
+  <input class="form-check-input importantFields gender" <?php if($gender==$id) { echo 'checked'; } ?> type="radio" name="gender" id="<?php echo 'gender-'.$id;?>" value="<?php echo $id;?>"  />
+  <label class="form-check-label" for="<?php echo 'gender-'.$id;?>"><?php echo $gName;?></label>
+</div>
+<?php } }  } ?>
+<?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('gender',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['gender'],'','trim');?></div><?php } ?>
+</div>
+</div>
 
 </div>
 </div>
@@ -203,8 +201,8 @@ foreach($categoryList as $category)
 		?>
 		<div class="col-md-2 mb-2">
 		<div class="form-check">
-		<input class="form-check-input importantFields services" name="services[]" type="checkbox" value="<?php echo $testID;?>" id="<?php echo 'text-'.$testID;?>" <?php if($existsServicesStatus>0 && in_array($testID,$existsServices)==true) { echo 'checked'; } ?>  />
-		<label class="form-check-label" for="<?php echo 'text-'.$testID;?>"><?php echo $testName;?></label>
+		<input class="form-check-input importantFields services" name="services[]" type="checkbox" value="<?php echo $testID;?>"  data-amount="<?php echo $amount;?>" id="<?php echo 'text-'.$testID;?>" <?php if($existsServicesStatus>0 && in_array($testID,$existsServices)==true) { echo 'checked'; } ?>  />
+		<label class="form-check-label" for="<?php echo 'text-'.$testID;?>"><?php echo $testName;?><br><span class="serviceAmount" ><i class="fa-solid fa-indian-rupee-sign"></i><?php echo $amount;?></span></label>
 		</div>
 		</div>
 		<?php
@@ -221,6 +219,7 @@ foreach($categoryList as $category)
 ?>
 
 <div class="col-md-2 mb-2">
+<p class="d-none totalAmount">Total Amount:<i class="ms-2 fa-solid fa-indian-rupee-sign"></i><b></b></p>
 <button type="submit" class="btn btn-success btn-sm" ><i class="fas fa-save me-2"></i>Save</button>
 </div>
 
@@ -295,6 +294,19 @@ function validateForm(parent)
 						}
 					}
 					
+				}
+				else if(name=='age' && val>100)
+				{
+					response=1;
+					t.addClass("is-invalid");
+					if(t.next('.invalid-feedback').length<=0)
+					{
+						$('<div class="invalid-feedback">  '+placeholder+' between 0 to 100 value</div>').insertAfter(t);
+					}
+					else
+					{
+						t.parent().find(".invalid-feedback").text(placeholder+' between 0 to 100 value');
+					}
 				}
 				else if( t.attr("type")=='checkbox')
 				{
@@ -416,6 +428,22 @@ $(document).ready(function(e){
 		{
 			t[0].submit();
 		}
+	});
+	$('body').on('change','input.services',function(e){
+		var t=$(this);
+		var parent=t.closest('form') || 0;
+		var services=parent.find("input.services:checked") || 0;
+		parent.find(".totalAmount").addClass("d-none").find("b").text('');
+		if(services.length>0)
+		{
+			var totalAmount=0;
+			services.each(function(index,obj){
+				var t2=$(this);
+				totalAmount+=toAmount(t2.attr("data-amount"));
+			});
+			parent.find(".totalAmount").removeClass("d-none").find("b").text(totalAmount);
+		}
+		
 	});
 	
 });
