@@ -22,7 +22,7 @@ $get=$request->getGetPost();
 <div class="card-body">
 <div class="row">
 <div class="col-md-12">
-<?php echo form_open_multipart(site_url($prePath.'customer/list'),array('name'=>'searchForm','class'=>'form row justify-content-between','method'=>'GET'));?>
+<?php echo form_open_multipart(site_url($prePath.'doctor/list'),array('name'=>'searchForm','class'=>'form row justify-content-between','method'=>'GET'));?>
 <div class="col-md-4 mb-2">
 <label  class="form-label text-dark"> Search</label>
 <div class="input-group mb-3">
@@ -57,13 +57,13 @@ $get=$request->getGetPost();
 	<table class="table">
 	<thead>
 	<tr>
-	<th scope="col" style="width:5%;">#</th>
+	<th scope="col" style="width:10%;">#</th>
 	<th scope="col" style="width:25%;">Doctor Name</th>
 	<th scope="col" style="width:15%;">Designation</th>
 	<th scope="col" style="width:25%;">Hospital/Clinic</th>
 	<th scope="col" style="width:15%;">Mobile No</th>
 	<!--th scope="col" style="width:10%;">Status</th-->
-	<th scope="col" style="width:15%;">Action</th>
+	<th scope="col" style="width:10%;">Action</th>
 	</tr>
 	</thead>
 	<tbody>

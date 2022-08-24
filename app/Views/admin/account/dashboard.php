@@ -21,22 +21,43 @@ if(empty($backupDownload))
 $statisticResultStatus=isEmptyArray($statisticResult);
 $dateWise=($statisticResultStatus>0) ?  checkVariable($statisticResult['testList']['dateWise'],0) : 0;
 $dateWiseStatus=isEmptyArray($dateWise);
+$reportInfo=($statisticResultStatus>0) ?  checkVariable($statisticResult['info'],0) : 0;
+$reportInfoStatus=isEmptyArray($reportInfo);
 $monthWise=($statisticResultStatus>0) ? checkVariable($statisticResult['testList']['monthWise'],0) : 0;
 $monthWiseStatus=isEmptyArray($monthWise);
+$patientList=($statisticResultStatus>0) ?  checkVariable($statisticResult['testList']['patients'],0) : 0;
+$patientListStatus=isEmptyArray($patientList);
+$servicesList=($statisticResultStatus>0) ?  checkVariable($statisticResult['testList']['services'],0) : 0; 
+$servicesListStatus=isEmptyArray($servicesList);
 ?>
 <section class="content">
 <div class="container-fluid">
 <div class="row p-3 align-self-start justify-content-start">
-<div class="col-md-12 mb-2">
+<div class="col-md-6 mb-2">
 <p class="h4">Dashboard</p>
+</div>
+<div class="col-md-6 text-end mb-2">
+<div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+<a type="submit" class="btn btn-success btn-sm" href="<?php echo site_url($prePath.'test/list');?>" ><i class="fas fa-list-alt me-2"></i>Form</a>
+<a type="button" class="btn btn-primary" href="<?php echo site_url($prePath.'payment/list');?>"><i class="fa fa-indian-rupee-sign me-2"></i>Payment</a>
+<a type="button" class="btn btn-info" href="<?php echo site_url($prePath.'report/doctor');?>"><i class="fa fa-print me-2"></i>Doctor Report</a>
+</div>
 </div>
 </div>
 
+<?php
+if($statisticResultStatus>0 && ($patientListStatus>0 || $servicesListStatus>0) || ($monthWiseStatus>0 || $dateWiseStatus>0 ) || $reportInfoStatus>0 )
+{
+?>
 <div class="row p-3 align-self-start justify-content-start">
 <div class="col-md-12">
 <div class="card">
 <div class="card-body">
 <div class="row">
+<?php
+if($monthWiseStatus>0 || $dateWiseStatus>0 )
+{
+?>
 <div class="col-md-12 text-center mb-4">
 <div class="btn-group  btn-group-sm" role="group" aria-label="Basic radio toggle button group">
   <input type="radio" class="btn-check chartToggle" value="1" name="chartToggle" id="btnradio1" autocomplete="off" checked />
@@ -55,12 +76,68 @@ $monthWiseStatus=isEmptyArray($monthWise);
   <canvas id="monthChart"></canvas>
 </div>
 </div>
+<?php } ?>
 <?php
-if($statisticResultStatus>0 )//&& $userPermissionsStatus>0 && $menuID>0 && in_array(2,$userPermissions)==true
+$userPermissions=0;
+$userPermissionsStatus=0;
+$totalDoctors=0;
+$totalService=0;
+$totalCategory=0;
+$totalTest=0;
+$totalAmount=0;
+$totalCommission=0;
+$totalEarning=0;
+$totalPatient=0;
+if($reportInfoStatus>0)
 {
-	$patientList=checkVariable($statisticResult['testList']['patients'],0);
-	if(isEmptyArray($patientList)>0)
+$userPermissions=checkVariable($statisticResult['userPermissions'],0);	
+$userPermissionsStatus=isEmptyArray($userPermissions);
+$totalDoctors=checkVariable($reportInfo['totalDoctors'],0,'intval');
+$totalService=checkVariable($reportInfo['totalService'],0,'intval');
+$totalCategory=checkVariable($reportInfo['totalCategory'],0,'intval');
+$totalPatient=checkVariable($reportInfo['totalPatient'],0,'intval');
+$totalTest=checkVariable($reportInfo['totalTest'],0,'intval');
+$totalAmount=checkVariable($reportInfo['totalAmount'],0,'doubleval');
+$totalCommission=checkVariable($reportInfo['totalCommission'],0,'doubleval');
+}
+$totalEarning=$totalAmount-$totalCommission;
+$statisticsList=array(
+array('title'=>'Total Doctors','value'=>$totalDoctors,'icon'=>'fa-solid fa-user-doctor mr-2 fa-2x','background'=>'bg-gradient bg-primary','menuID'=>2),
+array('title'=>'Total Patient','value'=>$totalPatient,'icon'=>'fa-solid fa-user-doctor mr-2 fa-2x','background'=>'bg-gradient bg-dark ','menuID'=>2),
+array('title'=>'Total Services','value'=>$totalService,'icon'=>'fa-solid fa-microscope mr-2 fa-2x','background'=>'bg-gradient bg-success','menuID'=>2),
+array('title'=>'Total Category','value'=>$totalCategory,'icon'=>'fa-solid fa-boxes-stacked mr-2 fa-2x','background'=>'bg-gradient bg-danger','menuID'=>2),
+array('title'=>'Total Test','value'=>$totalTest,'icon'=>'fa-solid fa-vial-circle-check mr-2 fa-2x','background'=>'bg-gradient bg-info','menuID'=>2),
+array('title'=>'Total Amount','value'=>convertIntoIndianRupesh($totalAmount),'icon'=>'fa-solid fa-indian-rupee-sign mr-2 fa-2x','background'=>'bg-gradient bg-primary','menuID'=>2),
+array('title'=>'Total Commissions','value'=>convertIntoIndianRupesh($totalCommission),'icon'=>'fa-solid fa-indian-rupee-sign mr-2 fa-2x','background'=>'bg-gradient bg-danger','menuID'=>2),
+array('title'=>'Total Earning','value'=>convertIntoIndianRupesh($totalEarning),'icon'=>'fa-solid fa-indian-rupee-sign mr-2 fa-2x','background'=>'bg-gradient bg-success','menuID'=>2),
+);
+foreach($statisticsList as $list){
+	$extra=checkVariable($list['extra'],'');
+	$extraValue=checkVariable($list['extraValue'],0,'intval');
+	$menuID=checkVariable($list['menuID'],0,'intval');
+	if($menuID>0 )//$userPermissionsStatus>0 && && in_array($menuID,$userPermissions)==true 
 	{
+?>
+
+<div class="col-md-3 mb-3">
+<div class="card m-2 <?php echo checkVariable($list['background'],'');?>  shadow-sm">
+<div class="card-body">
+<div class="d-flex">
+<div class="me-auto  p-2 bd-highlight">
+<p class=" text-uppercase text-white fs-12 fw-bold"><?php echo checkVariable($list['title'],'');?></p>
+<p class="mb-0  text-white"><?php echo checkVariable($list['value'],'');if(!empty($extra)){ echo '('.$extra.')'; } if(!empty($extraValue)){ echo ' / <span class="text-muted">'.$extraValue.'</span>'; } ?></p>
+</div>
+<div class="p-2 bd-highlight"><i class="text-white <?php echo checkVariable($list['icon'],'');?>"></i></div>
+</div>
+</div>
+</div>
+</div>	
+<?php } } ?>
+<?php
+//if($statisticResultStatus>0 )//&& $userPermissionsStatus>0 && $menuID>0 && in_array(2,$userPermissions)==true
+//{	
+if($patientListStatus>0)
+{	
 ?>
 <div class="col-md-12">
 <div class="table-responsive">
@@ -72,11 +149,11 @@ if($statisticResultStatus>0 )//&& $userPermissionsStatus>0 && $menuID>0 && in_ar
 </th>
 </tr>
 <tr>
-<th>#</th>
-<th>Date</th>
-<th >Patient Name</th>
-<th>Services Name</th>
-<th >Reffered By</th>
+<th style="width:5%;">#</th>
+<th style="width:10%;">Date</th>
+<th style="width:20%;">Patient Name</th>
+<th style="width:45%;">Services Name</th>
+<th style="width:20%;">Reffered By</th>
 </tr>
 </thead>
 <tbody>
@@ -97,7 +174,6 @@ foreach($patientList as $key=>$row)
 	?>
 	<tr>
 	<td><?php echo ($key+1);?></td>
-	
 	<td><?php echo (!empty($labDate)) ? date("d/m/Y",$labDate) : '';?></td>
 	<td><?php echo $patientName;?></td>
 	<td>
@@ -121,13 +197,10 @@ foreach($patientList as $key=>$row)
 </table>
 </div>
 </div>
-<?php }  } ?>
+<?php }   ?>
 <?php
-if($statisticResultStatus>0 )//&& $userPermissionsStatus>0 && $menuID>0 && in_array(2,$userPermissions)==true
+if($servicesListStatus>0)
 {
-	$patientList=checkVariable($statisticResult['testList']['services'],0);
-	if(isEmptyArray($patientList)>0)
-	{
 ?>
 <div class="col-md-12">
 <div class="table-responsive">
@@ -139,16 +212,16 @@ if($statisticResultStatus>0 )//&& $userPermissionsStatus>0 && $menuID>0 && in_ar
 </th>
 </tr>
 <tr>
-<th>#</th>
-<th>Date</th>
-<th >Services Name</th>
-<th >Reffered By</th>
-<th>Amount</th>
+<th style="width:5%;">#</th>
+<th style="width:10%;">Date</th>
+<th style="width:40%;">Services Name</th>
+<th style="width:30%;">Reffered By</th>
+<th style="width:15%;">Amount</th>
 </tr>
 </thead>
 <tbody>
 <?php
-foreach($patientList as $key=>$row)
+foreach($servicesList as $key=>$row)
 {
 	//td.testName,td.amount,td.discountValue,tl.labDate,dl.doctorName
 	$testName=checkVariable($row['testName'],0,'trim');
@@ -162,7 +235,7 @@ foreach($patientList as $key=>$row)
 	<td><?php echo (!empty($labDate)) ? date("d/m/Y",$labDate) : '';?></td>
 	<td><?php echo $testName;?></td>
 	<td><?php echo $doctorName;?></td>
-	<td><i class="fa-solid fa-indian-rupee-sign"></i><?php echo $amount;?></td>
+	<td><i class="fa-solid fa-indian-rupee-sign me-1"></i><?php echo convertIntoIndianRupesh($amount);?></td>
 	</tr>
 	<?php
 }
@@ -172,7 +245,7 @@ foreach($patientList as $key=>$row)
 </table>
 </div>
 </div>
-<?php }  } ?>
+<?php }   ?>
 
 
 
@@ -181,7 +254,15 @@ foreach($patientList as $key=>$row)
 </div>
 </div>
 </div>
-
+<?php } else { ?>
+<div class="card">
+  <div class="card-body">
+    <blockquote class="blockquote mb-0">
+	  <h5 class="card-title text-center">No data found.</h5>
+    </blockquote>
+  </div>
+</div>
+<?php } ?>
 </div>
 </section>
 <script src="<?php echo  base_url('assets/packages/chart.js/dist/chart.js')?>"></script>
@@ -201,6 +282,8 @@ if($.trim(monthWise).length>0)
 $(document).ready(function(e){
 	let dayChart=0;
 	let monthChart=0;
+	const cMonth=moment().format("MMMM"); 
+	const cYear=moment().format("YYYY"); 
 	let config=0;
 	let config2=0;
 	var chartColors = {
@@ -210,7 +293,7 @@ $(document).ready(function(e){
 	green: 'rgb(75, 192, 192)',
 	blue: 'rgb(54, 162, 235)',
 	purple: 'rgb(153, 102, 255)',
-	grey: 'rgb(231,233,237)'
+	black: 'rgb(34 38 42)'
 	};
     var totalColor=Object.keys(chartColors).length || 0;
 	--totalColor;
@@ -304,7 +387,7 @@ $(document).ready(function(e){
 	},
 	title: {
 	display: true,
-	text: 'Daily Report'
+	text: 'Daily Report - '+cMonth+','+cYear
 	},
 	tooltips: {
 	mode: 'index',
@@ -374,7 +457,7 @@ $(document).ready(function(e){
 	},
 	title: {
 	display: true,
-	text: 'Monthly Report',
+	text: 'Monthly Report -'+cYear,
 	position: 'top',
 	},
 	tooltips: {

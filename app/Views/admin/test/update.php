@@ -81,7 +81,7 @@ $testID=($testDetailsStatus>0) ? checkVariable($testDetails['srNo'],'','intval')
 <div class="col-md-12 mt-3">
 <p class="fw-bold">Patient Details:-</p>
 </div>
-<div class="col-md-3 mb-2">
+<div class="col-md-2 mb-2">
 <label  class="form-label text-dark">referred Doctor Name<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
 <?php
 $doctor=($testDetailsStatus>0) ? checkVariable($testDetails['doctorID'],0,'intval') : 0;
@@ -100,7 +100,7 @@ if($srNo>0){
 </select>
 <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('doctor',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['doctor'],'','trim');?></div><?php } ?>
 </div>
-<div class="col-md-3">
+<div class="col-md-2">
 <div class="mb-2">
 <?php
 $patientName=($testDetailsStatus>0) ? checkVariable($testDetails['patientName'],'','trim') : '';
@@ -112,7 +112,7 @@ $patientName=($testDetailsStatus>0) ? checkVariable($testDetails['patientName'],
 </div>
 </div>
 
-<div class="col-md-1">
+<div class="col-md-2">
 <div class="mb-2">
 <?php
 $mobileNo=($testDetailsStatus>0) ? checkVariable($testDetails['mobileNo'],'','trim') : '';
@@ -238,7 +238,7 @@ foreach($categoryList as $category)
 <div class="col-md-2 mb-2">
 
 <p class="<?php if($totalAmount<=0) { ?> d-none <?php } ?> totalAmount">Total Amount:<i class="ms-2 fa-solid fa-indian-rupee-sign"></i><b><?php if($totalAmount>0) { echo $totalAmount;} ?></b></p>
-<button type="submit" class="btn btn-warning btn-sm" ><i class="fas fa-save me-2"></i>Update</button>
+<button type="submit" class="btn btn-warning btn-md" ><i class="fas fa-save me-2"></i>Update</button>
 </div>
 
 <?php echo form_close();?>

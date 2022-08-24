@@ -79,7 +79,10 @@ $routes->group('admin',["filter" => "authGuard"], function ($routes) {
 		$routes->get('service','Admin\Report::serviceDetails');
 		$routes->get('export','Admin\Report::exportFile');
 	});
-	
+	$routes->group('payment', function ($routes) {
+		$routes->get('list','Admin\Payment::listDetails');
+		$routes->get('list/export','Admin\Payment::exportFile');
+	});
 	$routes->group('doctor', function ($routes) {
 		$routes->get('list','Admin\Doctor::listDetails');
 		$routes->post('add','Admin\Doctor::add');

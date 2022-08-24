@@ -79,7 +79,7 @@ echo view($prePath.'common/headerSection');
 <div class="col-md-12 mt-3">
 <p class="fw-bold">Patient Details:-</p>
 </div>
-<div class="col-md-3 mb-2">
+<div class="col-md-2 mb-2">
 <label  class="form-label text-dark">referred Doctor Name<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
 <?php
 $doctor=old('doctor');
@@ -99,7 +99,7 @@ if($srNo>0){
 <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('doctor',$msg)==true){ ?> <div class="invalid-feedback"> <?php echo checkVariable($msg['doctor'],'','trim');?></div><?php } ?>
 </div>
 
-<div class="col-md-3">
+<div class="col-md-2">
 <div class="mb-2">
 <label  class="form-label text-dark">Patient Name:-<i class="ms-2 fa-solid fa-asterisk requiredLable"></i></label>
 <input type="text" class="form-control form-control-sm importantFields <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('patientName',$msg)==true){ echo 'is-invalid'; } ?>"   name="patientName" maxlength="150" placeholder="Patient Name" value="<?php echo old('patientName') ?>"  />
@@ -108,7 +108,7 @@ if($srNo>0){
 </div>
 </div>
 
-<div class="col-md-1">
+<div class="col-md-2">
 <div class="mb-2">
 <label  class="form-label text-dark">Mobile No:-<i class="ms-1 fa-solid fa-asterisk requiredLable"></i></label>
 <input type="text" class="form-control form-control-sm onlyNumber validateMobile importantFields <?php if($status==-11 && isEmptyArray($msg)>0 && array_key_exists('mobileNo',$msg)==true){ echo 'is-invalid'; } ?>"   name="mobileNo" maxlength="15" placeholder="Mobile No" value="<?php echo old('mobileNo') ?>"  />
@@ -220,7 +220,7 @@ foreach($categoryList as $category)
 
 <div class="col-md-2 mb-2">
 <p class="d-none totalAmount">Total Amount:<i class="ms-2 fa-solid fa-indian-rupee-sign"></i><b></b></p>
-<button type="submit" class="btn btn-success btn-sm" ><i class="fas fa-save me-2"></i>Save</button>
+<button type="submit" class="btn btn-success btn-md" ><i class="fas fa-save me-2"></i>Save</button>
 </div>
 
 <?php echo form_close();?>

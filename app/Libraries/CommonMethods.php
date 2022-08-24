@@ -118,6 +118,21 @@ class  CommonMethods
 		$currentMonth=intval($timing->currentMonth);
 		$currentDay=intval($timing->currentDay);
 		$currentYear=intval($timing->currentYear);
+		$queryText="select (SELECT count(srNo) FROM doctor_list where isRemoved=?) totalDoctors,(SELECT count(srNo) FROM service_list where isRemoved=? ) totalService,(SELECT count(srNo) FROM test_list where isRemoved=?) totalTest,(SELECT count(srNo) FROM service_category where isRemoved=?) totalCategory,(SELECT COALESCE(sum(amount),0) FROM test_details where isRemoved=?) totalAmount,(SELECT COALESCE(sum(discountValue),0) FROM test_details where isRemoved=?) totalCommission,(SELECT count(DISTINCT patientName) FROM test_list where isRemoved=?) totalPatient";
+		$parameters=array($isRemoved,$isRemoved,$isRemoved,$isRemoved,$isRemoved,$isRemoved,$isRemoved);
+		$selQuery = $db->query($queryText,$parameters);
+		if($selQuery->getNumRows()>0)
+		{
+			$row=$selQuery->getRowArray();
+			$response['info']['totalDoctors']=checkVariable($row['totalDoctors'],0,'intval');
+			$response['info']['totalService']=checkVariable($row['totalService'],0,'intval');
+			$response['info']['totalTest']=checkVariable($row['totalTest'],0,'intval');
+			$response['info']['totalCategory']=checkVariable($row['totalCategory'],0,'intval');
+			$response['info']['totalAmount']=checkVariable($row['totalAmount'],0,'doubleval');
+			$response['info']['totalCommission']=checkVariable($row['totalCommission'],0,'doubleval');
+			$response['info']['totalPatient']=checkVariable($row['totalPatient'],0,'intval');
+		}
+		
 		$queryText="SELECT count(srNo) found ,DAY(labDate) day FROM test_list where lStatus=? and isRemoved=? and year(labDate)=? and month(labDate)=? group by day(labDate) order by day ASC ";
 		$parameters=array(1,$isRemoved,$currentYear,$currentMonth);
 		$selQuery = $db->query($queryText,$parameters);

@@ -20,23 +20,22 @@ $doctorList=$doctorModel->getList($parameters2);
 $doctorListStatus=isEmptyArray($doctorList);
 $genderTypes=CommonMethods::getGenderWiseTypes(0);
 $genderTypesStatus=isEmptyArray($genderTypes);
+$reportOptions=CommonMethods::getReportOptions(0);
+$reportOptionsStatus=isEmptyArray($reportOptions);
 ?>
 <section class="content">
 <div class="container-fluid">
 <div class="row p-3 align-items-center justify-content-around">
-<div class="col-md-6 col-8">
-<p class="pageTitle fs-5">Test List</p>
-</div>
-<div class="col-md-6 col-4 mb-3 text-end">
-<a href="<?php echo site_url($prePath.'/test/add');?>" class="btn btn-outline-success btn-sm" ><i class="fas fa-plus me-2"></i>New Test</a>
+<div class="col-md-12 col-12">
+<p class="pageTitle fs-5">Payment List</p>
 </div>
 <div class="col-md-12 p-0 mb-3">
 <div class="card">
 <div class="card-body">
 <div class="row">
 <div class="col-md-12">
-<?php echo form_open_multipart(site_url($prePath.'test/list'),array('name'=>'searchForm','class'=>'form row justify-content-start','method'=>'GET'));?>
-<div class="col-md-3 mb-2">
+<?php echo form_open_multipart(site_url($prePath.'payment/list'),array('name'=>'searchForm','class'=>'form row justify-content-start','method'=>'GET'));?>
+<div class="col-md-3 mb-2 d-none">
 <label  class="form-label text-dark">Doctor</label>
 <?php
 $doctor=checkVariable($get['doctor'],0,'intval');
@@ -59,45 +58,73 @@ if($srNo>0){ ?>
 </div>
 </div>
 
-<div class="col-md-1 mb-2">
+<div class="col-md-2 mb-2">
 <?php 
 $sortBy=checkVariable($get['sortBy'],0,'intval'); 
 ?>
 <label  class="form-label text-dark">Sort By</label>
 <select name="sortBy" class="form-select form-select-sm">
 <option <?php if($sortBy==0) { echo 'selected'; } ?> value="0">None</option>
-<option <?php if($sortBy==1) { echo 'selected'; } ?> value="1">Year</option>
-<option <?php if($sortBy==2) { echo 'selected'; } ?> value="2">Custom</option>
+<option <?php if($sortBy==1) { echo 'selected'; } ?> value="1">Month/Year</option>
+<option <?php if($sortBy==2) { echo 'selected'; } ?> value="2">Range</option>
 </select>
 </div>
-<div class="col-md-1 mb-2 <?php if(in_array($sortBy,array(0,2))==true ) { ?> d-none <?php } ?> sortByBlcok" data-type="1">
-<label  class="form-label text-dark"> Year</label>
-<input type="text" class="form-control year form-control-sm"   name="year" placeholder="Year" value="<?php echo checkVariable($get['year']);?>" />
+<?php if($reportOptionsStatus>0){ 
+$yearList=checkVariable($reportOptions['yearList'],0);
+$monthList=checkVariable($reportOptions['monthList'],0);
+if(isEmptyArray($yearList)>0) {
+$fYear=checkVariable($get['year'],0,'intval');	
+?>
+<div class="col-md-2 mb-2 <?php if(in_array($sortBy,array(0,2))==true ) { ?> d-none <?php } ?> sortByBlcok" data-type="1">
+<label  class="form-label text-dark">Year</label>
+<select name="year" class="form-select form-select-sm" required>
+<option <?php if($fYear==0) { echo 'selected'; } ?> value="0">None</option>
+<?php foreach($yearList as $year) { ?>
+<option <?php if($year==$fYear) { echo 'selected'; } ?> value="<?php echo $year;?>"><?php echo $year;?></option>
+<?php }  ?>
+</select>
 </div>
-<div class="col-md-1 mb-2 <?php if(in_array($sortBy,array(0,1))==true ) { ?> d-none <?php } ?> sortByBlcok" data-type="2">
+<?php } 
+if(isEmptyArray($monthList)>0) {
+$fMonth=checkVariable($get['month'],0,'intval');		
+?>
+<div class="col-md-2 mb-2 <?php if(in_array($sortBy,array(0,2))==true ) { ?> d-none <?php } ?> sortByBlcok" data-type="1" >
+<label  class="form-label text-dark">Month</label>
+<select name="month" class="form-select form-select-sm">
+<option <?php if($fMonth==0) { echo 'selected'; } ?> value="0">None</option>
+<?php foreach($monthList as $month) { 
+$monthID=checkVariable($month['id'],0,'intval');
+$monthName=checkVariable($month['name'],0,'trim');
+?>
+<option <?php if($monthID==$fMonth) { echo 'selected'; } ?> value="<?php echo $monthID;?>"><?php echo $monthName;?></option>
+<?php } ?>
+</select>
+</div>
+<?php }  } ?>
+
+<div class="col-md-2 mb-2 <?php if(in_array($sortBy,array(0,1))==true ) { ?> d-none <?php } ?> sortByBlcok" data-type="2">
 <label  class="form-label text-dark"> From Date</label>
 <input type="text" class="form-control dateTime form-control-sm"   name="fromDate" placeholder="From Date" value="<?php echo checkVariable($get['fromDate']);?>" />
 </div>
-<div class="col-md-1 mb-2 <?php if(in_array($sortBy,array(0,1))==true ) { ?> d-none <?php } ?> sortByBlcok" data-type="2">
+<div class="col-md-2 mb-2 <?php if(in_array($sortBy,array(0,1))==true ) { ?> d-none <?php } ?> sortByBlcok" data-type="2">
 <label  class="form-label text-dark"> To Date</label>
 <input type="text" class="form-control dateTime form-control-sm" value="<?php echo checkVariable($get['toDate']);?>"  name="toDate" placeholder="To Date" />
 </div>
 
-<div class="col-md-2 mb-2 mt-md-4">
-<button type="submit" class="btn btn-success btn-sm" ><i class="fa fa-search me-2"></i>Search</button>
-</div>
 
-<div class="col-md-4 mb-2 d-none">
+<div class="col-md-3 mb-2 ">
 <label  class="form-label text-dark d-block">Export </label>
 <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+<button type="submit" class="btn btn-success btn-sm" ><i class="fa fa-search me-2"></i>Search</button>
+<button type="button" class="btn btn-primary" name="exportPDFBtn"><i class="fa fa-print me-2"></i>Print</button>
 <button type="button" class="btn btn-info" name="exportPDFBtn"><i class="fa fa-file-pdf me-2"></i>PDF</button>
 <button type="button" class="btn btn-warning btn-sm" name="exportExcelBtn"><i class="fa fa-file-excel me-2"></i>Excel</button>
 </div>
 </div>
 
-<input type="hidden" name="process" />
+<input type="hidden" name="exportType" />
 <?php echo form_close();?>
-<?php echo form_open_multipart(site_url($prePath.'order/list/export'),array('name'=>'orderFormData', 'class' => 'd-none','method'=>'POST','target'=>'_blank'));?>
+<?php echo form_open_multipart(site_url($prePath.'payment/list/export'),array('name'=>'formData', 'class' => 'd-none','method'=>'POST','target'=>'_blank'));?>
 <?php echo form_close();?>
 </div>
 </div>
@@ -108,7 +135,6 @@ $sortBy=checkVariable($get['sortBy'],0,'intval');
 <div class="card">
   <div class="card-body">
 	<div class="row">
-	
 	<div class="col-md-12">
 	<div class="table-responsive">
 	<table class="table">
@@ -116,49 +142,40 @@ $sortBy=checkVariable($get['sortBy'],0,'intval');
 	<tr>
 	<th scope="col" style="width:8%;">#</th>
 	<th scope="col" style="width:10%;">Date</th>
-	<th scope="col" style="width:25%;">Doctor Name</th>
-	<th scope="col" style="width:27%;">Patient Name</th>
-	<th scope="col" style="width:10%;">Mobile No</th>
-	<th scope="col" style="width:10%;">Gender</th>
-	<th scope="col" style="width:10%;">Action</th>
+	<th scope="col" style="width:20%;">Patient Name</th>
+	<th scope="col" style="width:50%;">Services</th>
+	<th scope="col" style="width:12%;">Amount</th>
 	</tr>
 	</thead>
 	<tbody>
 	<?php
-	$testList=checkVariable($result['testList'],0);
-	if(isEmptyArray($testList)>0)
+	$paymentList=checkVariable($result['paymentList'],0);
+	if(isEmptyArray($paymentList)>0)
 	{
 		$i = 1;
 		if(isset($result['listIndex']) && intval($result['listIndex'])>0)
 		{
 		$i=$result['listIndex'];
 		}
-		foreach($testList as $test)
+		foreach($paymentList as $payment)
 		{
-		$srNo=checkVariable($test['srNo'],0,'intval');
-		$patientName=checkVariable($test['patientName'],0,'trim');
-		$mobileNo=checkVariable($test['mobileNo'],0,'trim');
-		$gender=checkVariable($test['gender'],0,'intval');
-		$age=checkVariable($test['age'],0,'intval');
-		$testID=checkVariable($test['testID'],0,'trim');
-		$doctorID=checkVariable($test['doctorID'],0,'intval');
-		$labDate=checkVariable($test['labDate'],0);
+		$patientName=checkVariable($payment['patientName'],0,'trim');
+		$services=checkVariable($payment['services'],0,'trim');
+		if(!empty($services))
+		{
+			$services='<span class="bg-primary badge me-1">'.str_replace('||','</span><span class="me-1 bg-primary badge">',$services).'</span>';
+		}
+		$totalAmount=checkVariable($payment['totalAmount'],0,'doubleval');
+		$doctorID=checkVariable($payment['doctorID'],0,'intval');
+		$labDate=checkVariable($payment['labDate'],0);
 		$labDate=(!empty($labDate)) ? date("d-m-Y",strtotime($labDate)) : '';
 		$doctorName='';
-		$genderName='';
 		if($doctorListStatus>0)
 		{
 			
 			$info=searchValueInArray(array('data'=>$doctorList,'search'=>array('srNo'=>$doctorID),'type'=>1,'isSingle'=>1));
 			if(isEmptyArray($info)>0){ 
 			$doctorName=checkVariable($info['doctorName'],'','trim');
-			}
-		}
-		if($genderTypesStatus>0)
-		{
-			$info=searchValueInArray(array('data'=>$genderTypes,'search'=>array('id'=>$gender),'type'=>1,'isSingle'=>1));
-			if(isEmptyArray($info)>0){ 
-			$genderName=checkVariable($info['name'],'','trim');
 			}
 		}
 		?>
@@ -172,21 +189,9 @@ $sortBy=checkVariable($get['sortBy'],0,'intval');
 		</label>
 		</td>
 		<td><span class="labDate"><?php echo $labDate;?></span></td>
-		<td><span class="doctorName"><?php echo $doctorName;?></span></td>
 		<td><span class="patientName"><?php echo $patientName;?></span></td>
-		<td><span class="mobileNo"><?php echo $mobileNo;?></span></td>
-		<td><span class="gender"><?php echo $genderName;?></span><br><span class="age badge bg-primary"><?php echo $age;?></span></td>
-		<td>
-		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-		<?php if($permissionsStatus>0 && in_array(1,$permissions)==true) { ?>
-		<button data-value="<?php echo $srNo; ?>" class="btn btn-warning btn-sm" name="viewBtn"><i class="fas fa-eye "></i></button>
-		<?php } ?>
-		<?php if($permissionsStatus>0 && in_array(3,$permissions)==true) { ?>
-		
-		<a href="<?php echo site_url($prePath.'test/update/'.$srNo); ?>" class="btn btn-secondary btn-sm "> <i class="fas fa-edit "></i></a>
-		<?php } ?>
-		</div>
-		</td>
+		<td><span class="services"><?php echo $services;?></span></td>
+		<td><i class="fa-solid fa-indian-rupee-sign me-1"></i><?php echo convertIntoIndianRupesh($totalAmount);?></td>
 		</tr>
 		<?php
 		$i++;
@@ -294,130 +299,77 @@ $(document).ready(function(e){
 		}
 		
 	});
-	$('body').on('click','button[name="viewBtn"]',function(e){
+	$('button[name="exportExcelBtn"]').on("click",function(e){
 		var t=$(this);
-		var parent=t.closest('tr') || 0;
-		var testID=toNumber(t.attr("data-value") || 0);
-		var labDate=parent.find(".labDate").text() || '';
-		var doctorName=parent.find(".doctorName").text() || '';
-		var patientName=parent.find(".patientName").text() || '';
-		var mobileNo=parent.find(".mobileNo").text() || '';
-		var gender=parent.find(".gender").text() || '';
-		var age=parent.find(".age").text() || '';
-		if(testID>0)
+		var parent=t.parents('form') || 0;
+		parent.find('input[name="exportType"]').val(1);
+		//===========Form Data==========//
+		var form2=$('form[name="formData"]') || 0;
+		form2.empty();
+		form2.attr("method","GET");
+		var forms=parent.find('input,select');
+		$.each(forms,function(i,obj){
+			form2.append($("<input>").attr("name",$(this).attr("name")).val($(this).val()).attr("type","hidden"));
+		});	
+		var preURL=form2.attr("action") || '';
+		var formdata=new FormData(form2[0]);
+		const queryString = new URLSearchParams(formdata).toString();
+		var url=preURL+'?'+queryString;
+		if($.trim(preURL).length>0 && $.trim(url).length>0)
 		{
-			var input='<div class="row">'+
-			'<div class="col-md-12 mb-2">'+
-			'<p class="dPatientName displayValue">Patient Name: <b>'+patientName+'</b></p>'+
-			'</div>'+
-			'<div class="col-md-4 mb-2">'+
-			'<p class="dMobileNo displayValue">Mobile No: <b>'+mobileNo+'</b></p>'+
-			'</div>'+
-			'<div class="col-md-4 mb-2">'+
-			'<p class="dGender displayValue">Gender: <b>'+gender+'</b></p>'+
-			'</div>'+
-			'<div class="col-md-4 mb-2">'+
-			'<p class="dAge displayValue"> Age: <b>'+age+'</b></p>'+
-			'</div>'+
-			'<div class="col-md-8 mb-2">'+
-			'<p class="dDoctorName displayValue"> Doctor Name: <b>'+doctorName+'</b></p>'+
-			'</div>'+
-			'<div class="col-md-4 mb-2">'+
-			'<p class="dDate displayValue"> Date: <b>'+labDate+'</b></p>'+
-			'</div>'+
-			'<div class="col-md-12 mb-2">'+
-			'<div class="table-responsive">'+
-			'<table class="table table-bordered align-middle" id="testServiceList" >'+
-			'<thead>'+
-			'<tr>'+
-			'<th colspan="5" width="100%" class="text-start">Service Details</th>'+
-			'</tr>'+
-			'<tr>'+
-			'<th width="10%">#</th>'+
-			'<th width="50%">Service Name</th>'+
-			'<th width="20%">Amount</th>'+
-			'<th width="20%">Commission Amount </th>'+
-			'</tr>'+
-			'</thead>'+
-			'<tbody></tbody>'+
-			'<tfoot></tfoot>'+
-			'</table>'+
-			'</div>'+
-			'</div>'+
-			'</div>';
-			if(input!='')
-			{
-				input=$.parseHTML(input);
-				input=$(input);
-				dialogModel.find(".modal-title").text('Test Details');
-				dialogModel.find(".modal-body .container-fluid").html(input);
-				dialogModel.find(".modal-dialog").addClass('modal-xl modal-dialog-scrollable');
-				dialogModel.find(".modal-footer").addClass('d-none');
-				//dialogBox.show();
-				getTestDetails(0,t,dialogModel,testID);
-			}
+			$('body').find('.formIframe').remove();
+			$('<iframe>', {
+			src: url,
+			id:  'myFrame',
+			frameborder: 0,
+			class : 'd-none formIframe',
+			scrolling: 'no'
+			}).appendTo('body.authenticate');
 		}
+		//form2[0].submit();
 	});
-	$("body").on("click",'button[name="removeBtn"]',function(e){
+	$('button[name="exportPDFBtn"]').on("click",function(e){
 		var t=$(this);
-		var testID=toNumber(t.attr('data-value') || 0);
-		if(testID>0)
+		var parent=t.parents('form') || 0;
+		parent.find('input[name="exportType"]').val(2);
+		//===========Form Data==========//
+		var form2=$('form[name="formData"]') || 0;
+		form2.empty();
+		form2.attr("method","GET");
+		var forms=parent.find('input,select');
+		$.each(forms,function(i,obj){
+			form2.append($("<input>").attr("name",$(this).attr("name")).val($(this).val()).attr("type","hidden"));
+		});
+		var preURL=form2.attr("action") || '';
+		var formdata=new FormData(form2[0]);
+		const queryString = new URLSearchParams(formdata).toString();
+		var url=preURL+'?'+queryString;
+		const data = [...formdata.entries()];
+		//const asString = data.map(x => `${encodeURIComponent(x[0])}=${encodeURIComponent(x[1])}`).join('&');
+		//console.log(asString);
+		if($.trim(preURL).length>0 && $.trim(url).length>0)
 		{
-		$.confirm({	
-		title: 'Confirm!',	
-		content: 'Are you sure?',
-		buttons: {
-		cancel: function () {},
-		yes: {
-		text: 'Yes', // With spaces and symbols
-		action: function () {
-		var formdata={'testID':testID};
-		$.ajax({url: "<?php echo site_url($prePath.'/test/remove');?>",type: "POST",data:formdata,cache:false,
-		beforeSend:function(){ 
-		t.prop("disabled",true);
-		},
-		error:function(){ t.prop("disabled",false); },
-		complete:function(){ t.prop("disabled",false); },
-		success: function(data)   
-		{
-			t.prop("disabled",false);
-			var status=0;
-			var msg='';
-			if(data!='' && data.length>1)
-			{
-				var result=$.parseJSON(data);
-				if($.isEmptyObject(result)==false)
-				{
-					status=isset(result.status) ? toNumber(result.status) : 0;
-					msg=isset(result.status) ? result.msg : '';
-				}
-			}
-			if(status==1)
-			{
-				window.location.reload();
-			}
-			else if(status==-2)
-			{
-				$.alert({
-				title: 'Warning',
-				content: 'Invalid service ID',
-				});
-				t.find("input").val('');
-			}
-			else
-			{
-				$.alert({
-				title: 'Error!',
-				content: 'Internal Error Occur!',
-				});
-			}
+			$('body').find('.formIframe').remove();
+			/*var iframe = document.createElement('iframe');  
+			iframe.style.visibility = "hidden"; 
+			iframe.src = url;  
+			iframe.class = 'formIframe d-none';        
+			document.body.appendChild(iframe);  
+			iframe.contentWindow.focus();       
+			iframe.contentWindow.print(); */
+			$('<iframe>', {
+			src: url+'#toolbar=1',
+			id:  'myFrame',
+			type:"application/pdf",
+			frameborder: 0,
+			class : 'd-none  formIframe',
+			scrolling: 'no'
+			}).appendTo('body.authenticate');
+			var myFrame=$("#myFrame");
+			myFrame[0].contentWindow.focus();       
+			myFrame[0].contentWindow.print();
 		}
-		});	
-		}
-		}
-		}
-		});	
-		}
+		//form2[0].submit();	
 	});
 	
 });
