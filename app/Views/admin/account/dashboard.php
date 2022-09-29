@@ -38,9 +38,9 @@ $servicesListStatus=isEmptyArray($servicesList);
 </div>
 <div class="col-md-6 text-end mb-2">
 <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-<a type="submit" class="btn btn-success btn-sm" href="<?php echo site_url($prePath.'test/list');?>" ><i class="fas fa-list-alt me-2"></i>Form</a>
-<a type="button" class="btn btn-primary" href="<?php echo site_url($prePath.'payment/list');?>"><i class="fa fa-indian-rupee-sign me-2"></i>Payment</a>
-<a type="button" class="btn btn-info" href="<?php echo site_url($prePath.'report/doctor');?>"><i class="fa fa-print me-2"></i>Doctor Report</a>
+<a type="submit" class="btn btn-outline-success btn-sm" href="<?php echo site_url($prePath.'test/list');?>" ><i class="fas fa-list-alt me-2"></i>Form</a>
+<a type="button" class="btn btn-outline-primary" href="<?php echo site_url($prePath.'payment/list');?>"><i class="fa fa-indian-rupee-sign me-2"></i>Payment</a>
+<a type="button" class="btn btn-outline-info" href="<?php echo site_url($prePath.'report/doctor');?>"><i class="fa fa-print me-2"></i>Doctor Report</a>
 </div>
 </div>
 </div>
